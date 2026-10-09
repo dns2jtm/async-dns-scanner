@@ -1,0 +1,6 @@
+# async-dns-scanner core engine is built entirely on the Python Standard Library (asyncio, socket, struct).
+# Zero external runtime dependencies required.
+
+# Optional development & testing dependencies:
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
