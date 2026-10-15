@@ -13,6 +13,15 @@ from .protocol import (
 )
 from .resolver import AsyncDNSScanner, DNSResponse
 from .valuator import DomainValuator
+from .ranking import (
+    DomainIRRanker,
+    RankedDomain,
+    ndcg_at_k,
+    mrr_score,
+    precision_at_k,
+    recall_at_k,
+    evaluate_ir_benchmark,
+)
 from .whois import query_whois, query_whois_async, WhoisRecord
 from .generator import (
     generate_cv_pattern,
@@ -26,6 +35,13 @@ __all__ = [
     "AsyncDNSScanner",
     "DNSResponse",
     "DomainValuator",
+    "DomainIRRanker",
+    "RankedDomain",
+    "ndcg_at_k",
+    "mrr_score",
+    "precision_at_k",
+    "recall_at_k",
+    "evaluate_ir_benchmark",
     "query_whois",
     "query_whois_async",
     "WhoisRecord",

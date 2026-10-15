@@ -13,6 +13,7 @@ A high-performance, asynchronous RFC 1035 UDP DNS scanner, linguistic brandabili
 - **Raw RFC 1035 Binary Serialization**: Constructs direct DNS wire-format UDP datagrams (`HEADER` + length-prefixed `QNAME` + `QTYPE` / `QCLASS`) and parses return flags and RCODEs (`NOERROR`, `NXDOMAIN`, `SERVFAIL`, `REFUSED`) without relying on heavy third-party DNS libraries.
 - **Asynchronous Datagram Engine**: Utilizes Python `asyncio` non-blocking socket protocols and bounded `asyncio.Semaphore` pools to execute 150+ concurrent queries with retries using exponential backoff with full jitter.
 - **Multi-Resolver Round-Robin Balancing**: Distributes query load across Cloudflare (`1.1.1.1`, `1.0.0.1`), Google (`8.8.8.8`, `8.8.4.4`), and Quad9 (`9.9.9.9`) to avoid rate limiting.
+- **Information Retrieval & Learning-to-Rank (`ranking.py`)**: Hybrid candidate ranking pipeline combining character n-gram (`n in {2,3,4}`) + morpheme TF-IDF cosine similarity, linguistic/phonetic pronounceability, and non-linear neural feature interaction scoring, evaluated offline via `NDCG@k`, `MRR`, `Precision@k`, and `Recall@k`.
 - **Linguistic & Phonetic Valuation**: Analyzes candidate labels for phonetic pronounceability (optimal vowel ratios, consonant-vowel alternation scoring, cluster penalties) and dictionary frequency modeling. Ships with a small built-in lexicon; load SOWPODS or any word list via `--lexicon`.
 - **Direct Port 43 WHOIS Verification**: Validates available candidate registrations against authoritative TLD registries via raw TCP streams.
 - **Phonetic Domain Generator**: Generates pronounceable domain templates (e.g., CVCV, CVCVC) and morpheme combinations.
@@ -175,6 +176,18 @@ score_data = valuator.evaluate("stride")
 
 print(f"Pronounceability: {score_data['pronounceability']}")
 print(f"Composite Score: {score_data['composite_score']}")
+```
+
+---
+
+### Information Retrieval & Candidate Ranking (`NDCG@k`, `MRR`)
+
+```python
+from dns_scanner import DomainIRRanker, evaluate_ir_benchmark
+
+ranker = DomainIRRanker(["cloudmesh.io", "datacloud.io", "quantflow.io", "xqzvbnm.io"])
+for item in ranker.rank("cloud mesh", top_k=2):
+    print(item.domain, item.score, item.tfidf_similarity)
 ```
 
 ---
